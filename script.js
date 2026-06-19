@@ -1,4 +1,4 @@
-const myLibrary = [];
+let myLibrary = [];
 
 function Book(title, author, pages, read) {
     this.id = crypto.randomUUID();
@@ -18,15 +18,38 @@ function displayBooks() {
     while (library.firstChild) {
         library.removeChild(library.firstChild);
     }
-myLibrary.forEach((book) => {
+  myLibrary.forEach((book) => {
   const card = document.createElement('div');
   card.classList.add('book-card');
-  card.textContent = `${book.title} by ${book.author}, ${book.pages} pages`;
+  card.dataset.id = book.id;
+
+  const info = document.createElement('p');
+  info.textContent = `${book.title} by ${book.author}, ${book.pages} pages`;
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remove';
+
+  removeBtn.addEventListener('click', () => {
+    myLibrary = myLibrary.filter((b) => b.id !== book.id);
+    displayBooks();
+  });
+  
+  const toggleBtn = document.createElement('button');
+  toggleBtn.textContent = book.read ? 'Read' : 'Not Read';
+
+  toggleBtn.addEventListener('click', () => {
+    book.read = !book.read;
+    displayBooks();
+  });
+
+  card.appendChild(info);
+  card.appendChild(toggleBtn);
+  card.appendChild(removeBtn);
   library.appendChild(card);
 });
 }
 
-const addBookBtn =document.getElementById('add-book-btn');
+const addBookBtn = document.getElementById('add-book-btn');
 const dialog = document.getElementById('add-book-dialog');
 const form = document.getElementById('add-book-form');
 const cancelBtn = document.getElementById('cancel-btn');
